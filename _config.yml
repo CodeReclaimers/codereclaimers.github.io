@@ -1,0 +1,7 @@
+title: CodeReclaimers, LLC
+description: Custom software development, consulting, and applied mathematics
+baseurl: ""
+url: "https://codereclaimers.github.io"
+
+# Build settings
+markdown: kramdown

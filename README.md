@@ -1,2 +1,3 @@
-theme: jekyll-theme-minima
 # codereclaimers.github.io
+
+GitHub Pages site for CodeReclaimers, LLC.
