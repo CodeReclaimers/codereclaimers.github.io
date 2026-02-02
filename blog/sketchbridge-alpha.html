@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcing SketchBridge Alpha - CodeReclaimers</title>
+    <style>
+        body {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            margin-top: 2em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 2em;
+        }
+
+        .back-link {
+            margin-bottom: 2em;
+            display: block;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 1.5em 0;
+            border: 1px solid #ddd;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+
+        footer {
+            margin-top: 3em;
+            padding-top: 1em;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+    <h1>Announcing SketchBridge Alpha</h1>
+    <p class="date">February 2, 2026</p>
+
+    <p>I'm pleased to announce the alpha release of <strong>SketchBridge</strong>, a desktop
+    application that makes it easy to transfer 2D sketches between different CAD platforms.</p>
+
+    <img src="https://github.com/CodeReclaimers/sketch_bridge/raw/master/screenshot.png"
+         alt="SketchBridge application screenshot">
+
+    <h2>The Problem</h2>
+
+    <p>If you've ever worked with multiple CAD systems, you know the frustration of trying
+    to move sketch geometry between them. Each platform uses its own internal format, and
+    while standards like STEP and IGES exist for 3D geometry, 2D sketches with their
+    constraints are often left behind or degraded during transfer.</p>
+
+    <h2>The Solution</h2>
+
+    <p>SketchBridge provides a simple graphical interface for transferring sketches between
+    CAD applications. It currently supports:</p>
+
+    <ul>
+        <li>FreeCAD</li>
+        <li>Autodesk Fusion 360</li>
+        <li>Autodesk Inventor</li>
+        <li>SolidWorks</li>
+    </ul>
+
+    <p>Under the hood, SketchBridge uses <a href="https://github.com/CodeReclaimers/morphe">Morphe</a>,
+    a platform-agnostic framework for representing sketch geometry and constraints. This
+    intermediate representation allows sketches to be transferred without losing constraint
+    information.</p>
+
+    <h2>Key Features</h2>
+
+    <ul>
+        <li>Real-time monitoring of connected CAD applications</li>
+        <li>Visual preview of sketches before transfer</li>
+        <li>Geometric transformations (translation and rotation) during export</li>
+        <li>Flexible plane selection for imported sketches</li>
+        <li>JSON-based file storage for sharing sketches</li>
+    </ul>
+
+    <h2>Getting Started</h2>
+
+    <p>SketchBridge is available on GitHub. This is an alpha release, so expect some rough
+    edges, but I welcome feedback and contributions.</p>
+
+    <p><a href="https://github.com/CodeReclaimers/sketch_bridge">View the project on GitHub</a></p>
+
+    <footer>
+        <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+    </footer>
+</body>
+</html>
