@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting Up OpenClaw in an Isolated VM - CodeReclaimers</title>
+    <style>
+        body {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            margin-top: 2em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+        }
+
+        h3 {
+            font-size: 1.1em;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 2em;
+        }
+
+        .back-link {
+            margin-bottom: 2em;
+            display: block;
+        }
+
+        pre {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1em;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+
+        code {
+            font-family: "Consolas", "Monaco", monospace;
+            background-color: #f5f5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5em;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+
+        .series-nav {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 1em;
+            margin: 2em 0;
+            border-radius: 4px;
+        }
+
+        .series-nav strong {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        footer {
+            margin-top: 3em;
+            padding-top: 1em;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+    <h1>Setting Up OpenClaw in an Isolated VM</h1>
+    <p class="date">February 2, 2026</p>
+
+    <p>This is the first in a series of posts documenting my experience setting up
+    <a href="https://github.com/openclaw-ai/openclaw">OpenClaw</a>, an AI assistant platform,
+    in an isolated virtual machine. The goal was to run it with minimal disruption to my
+    host system, with easy teardown if needed.</p>
+
+    <p><strong>Goals for this setup:</strong></p>
+    <ul>
+        <li>Run OpenClaw in an isolated VM</li>
+        <li>Minimal disruption to host system, easy teardown</li>
+        <li>VM needs internet access</li>
+        <li>VM needs access to Ollama on host (port 11434)</li>
+        <li>Host needs access to OpenClaw interface (port 18789)</li>
+        <li>Discord bot integration</li>
+    </ul>
+
+    <h2>Why Multipass?</h2>
+
+    <p>I chose <a href="https://multipass.run/">Multipass</a> for its minimal host footprint
+    and ease of setup/removal. Other options I considered included VirtualBox, QEMU/KVM,
+    and GNOME Boxes, but Multipass offered the simplest path to a working Ubuntu VM.</p>
+
+    <h3>Creating the VM</h3>
+
+<pre><code>multipass launch --name ai-assistant --cpus 2 --memory 4G --disk 20G 24.04</code></pre>
+
+    <p>This creates an Ubuntu 24.04 VM with 2 CPUs, 4GB RAM, and 20GB disk space.</p>
+
+    <h3>Networking Details</h3>
+
+    <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>VM IP</td><td><code>10.119.193.216</code></td></tr>
+        <tr><td>Host IP (from VM)</td><td><code>10.119.193.1</code></td></tr>
+        <tr><td>Gateway</td><td>Default Multipass bridge</td></tr>
+    </table>
+
+    <h3>DNS Fix Required</h3>
+
+    <p>DNS resolution failed out of the box. I fixed it by configuring Google DNS:</p>
+
+<pre><code>sudo mkdir -p /etc/systemd/resolved.conf.d
+echo -e "[Resolve]\nDNS=8.8.8.8 8.8.4.4" | sudo tee /etc/systemd/resolved.conf.d/dns.conf
+sudo systemctl restart systemd-resolved</code></pre>
+
+    <h3>Useful Multipass Commands</h3>
+
+<pre><code>multipass shell ai-assistant     # Access VM
+multipass info ai-assistant      # Check VM status
+multipass stop ai-assistant      # Stop VM
+multipass delete ai-assistant && multipass purge  # Full cleanup</code></pre>
+
+    <h2>OpenClaw Configuration</h2>
+
+    <h3>Ollama Provider Setup</h3>
+
+    <p>To use local Ollama models running on the host, I needed explicit provider
+    configuration in <code>openclaw.json</code>:</p>
+
+<pre><code>{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://10.119.193.1:11434/v1",
+        "apiKey": "ollama",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen2.5:32b",
+            "name": "Qwen 2.5 32B",
+            "contextWindow": 131072,
+            "maxTokens": 16384
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen2.5:32b"
+      }
+    }
+  }
+}</code></pre>
+
+    <p><strong>Key discovery:</strong> The <code>"api": "openai-completions"</code> field
+    is required for Ollama integration.</p>
+
+    <h3>Discord Configuration</h3>
+
+<pre><code>{
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "token": "YOUR_BOT_TOKEN",
+      "groupPolicy": "allowlist",
+      "dm": {
+        "enabled": true,
+        "policy": "pairing"
+      },
+      "guilds": {
+        "*": {
+          "requireMention": true,
+          "channels": {
+            "general": { "allow": true }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+
+    <p><strong>Required Discord Developer Portal settings:</strong></p>
+    <ul>
+        <li>Enable Message Content Intent</li>
+        <li>Enable Server Members Intent (for allowlists)</li>
+        <li>OAuth2 scopes: <code>bot</code>, <code>applications.commands</code></li>
+    </ul>
+
+    <h3>Gateway Network Binding</h3>
+
+    <p>To access OpenClaw from the host, set LAN binding:</p>
+
+<pre><code>{
+  "gateway": {
+    "bind": "lan",
+    "port": 18789
+  }
+}</code></pre>
+
+    <div class="series-nav">
+        <strong>OpenClaw VM Setup Series</strong>
+        Part 1: Setting Up OpenClaw in an Isolated VM (this post)<br>
+        Part 2: <a href="/blog/openclaw-local-vs-cloud-models.html">Local Models vs Cloud: A Tool-Calling Reality Check</a><br>
+        Part 3: <a href="/blog/openclaw-operations.html">Running OpenClaw: Security, Automation & Maintenance</a>
+    </div>
+
+    <footer>
+        <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+    </footer>
+</body>
+</html>
