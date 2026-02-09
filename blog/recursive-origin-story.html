@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How a YouTube Video Became a SaaS Product - CodeReclaimers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="site-header">
+        <h1><a href="/">CodeReclaimers, LLC</a></h1>
+    </div>
+
+    <div class="content">
+        <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+        <h1>How a YouTube Video Became a SaaS Product</h1>
+        <p class="date">February 9, 2026</p>
+
+        <p>A month or two ago I watched <a href="https://youtu.be/0teZqotpqT8">a video about
+        using an AI agent as a resume assistant</a>. I thought it was a clever idea, and I wanted
+        to learn how to build something like it. Around the same time, my client Creative Dezign
+        Concepts needed a better way to handle technical support for their product
+        <a href="https://dezignworks.com">DezignWorks</a>. So I built them a support
+        chatbot &mdash; Flask backend, Anthropic API, PostgreSQL for conversation history,
+        a hand-curated knowledge base.</p>
+
+        <p>It worked. The owner was genuinely impressed. And that's when it clicked: every small
+        software company has this same problem. They're too small for Zendesk, too busy to answer
+        the same questions repeatedly, and too niche for off-the-shelf solutions.</p>
+
+        <p>So I generalized it. The DezignWorks bot became
+        <a href="https://recursive.support">Recursive</a>, a platform that gives small businesses
+        self-improving AI support agents. The key idea is that the agents don't just answer
+        questions &mdash; they analyze their own interactions and propose knowledge base updates,
+        surfaced through weekly and monthly reports. The agents get smarter over time without
+        requiring constant manual tuning.</p>
+
+        <p>I have a lot more to say about the technical decisions, the deployment infrastructure,
+        and what "self-improving" actually means in practice. I'll be writing that up as a series
+        over the coming weeks.</p>
+
+        <footer>
+            <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+        </footer>
+    </div>
+</body>
+</html>
