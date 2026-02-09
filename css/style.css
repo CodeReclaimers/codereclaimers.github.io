@@ -1,0 +1,261 @@
+/* ===== Base ===== */
+body {
+    background-color: #1F1F1F;
+    font-family: 'Source Sans Pro', 'Open Sans', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* ===== Site Header ===== */
+.site-header {
+    background-color: #7070B0;
+    color: rgba(255,255,255,0.88);
+    text-align: center;
+    padding: 32px 20px;
+}
+
+.site-header h1 {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    color: #fff;
+    margin: 0 0 4px;
+    font-size: 1.8em;
+}
+
+.site-header p {
+    margin: 0;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95em;
+}
+
+.site-header a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    transition: all .15s ease-in-out;
+}
+
+.site-header a:hover {
+    text-shadow: 0 0 10px rgba(255,255,255,0.55);
+    border-bottom-color: rgba(255,255,255,0.8);
+}
+
+/* ===== Content Card ===== */
+.content {
+    background-color: #fff;
+    border-radius: 6px;
+    max-width: 750px;
+    margin: 28px auto;
+    padding: 36px 40px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    line-height: 1.7;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3 {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+}
+
+.content h1 {
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 0.3em;
+    color: #333;
+}
+
+.content h2 {
+    font-size: 1.3em;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    color: #444;
+}
+
+.content h3 {
+    font-size: 1.1em;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: #555;
+}
+
+/* ===== Links ===== */
+a {
+    color: #6868A8;
+    text-decoration: none;
+    transition: all .15s ease-in-out;
+}
+
+a:hover {
+    color: #50508C;
+    text-decoration: underline;
+}
+
+/* ===== Lists ===== */
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* ===== Blog Post Meta ===== */
+.date {
+    color: #888;
+    font-style: italic;
+    margin-bottom: 2em;
+    font-size: 0.95em;
+}
+
+.back-link {
+    display: block;
+    margin-bottom: 1.5em;
+    color: #6868A8;
+    font-size: 0.95em;
+}
+
+.back-link:hover {
+    color: #50508C;
+}
+
+/* ===== Blog List (index page) ===== */
+.blog-list li {
+    margin-bottom: 0.7em;
+}
+
+.blog-list .post-date {
+    color: #999;
+    font-size: 0.9em;
+}
+
+/* ===== Divider ===== */
+.divider {
+    text-align: center;
+    color: #bbb;
+    margin: 2em 0;
+    letter-spacing: 4px;
+}
+
+hr {
+    border: none;
+    text-align: center;
+    margin: 2em 0;
+}
+
+hr::before {
+    content: "* * *";
+    color: #bbb;
+}
+
+/* ===== Code ===== */
+pre {
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1em;
+    overflow-x: auto;
+    font-size: 0.88em;
+    line-height: 1.5;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', 'Menlo', monospace;
+    background-color: #f5f5f5;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.88em;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* ===== Tables ===== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.95em;
+}
+
+th, td {
+    border: 1px solid #e0e0e0;
+    padding: 0.5em 0.75em;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f5;
+    color: #444;
+    font-weight: 400;
+}
+
+/* ===== Series Navigation ===== */
+.series-nav {
+    background-color: #f5f5fa;
+    border: 1px solid #d8d8e8;
+    padding: 1em 1.2em;
+    margin: 2em 0;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.series-nav strong {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #555;
+}
+
+/* ===== Images ===== */
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+    background-color: #282838;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 24px 20px 32px;
+    font-size: 0.88em;
+    margin-top: 0;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+/* In-card footer (blog posts) */
+.content footer {
+    margin-top: 3em;
+    padding-top: 1em;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    color: #888;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 800px) {
+    .content {
+        margin: 16px 12px;
+        padding: 24px 20px 20px;
+        border-radius: 4px;
+    }
+
+    .site-header {
+        padding: 24px 16px;
+    }
+
+    .site-header h1 {
+        font-size: 1.5em;
+    }
+}

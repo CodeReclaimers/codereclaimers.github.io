@@ -4,126 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeReclaimers, LLC</title>
-    <style>
-        body {
-            font-family: Georgia, "Times New Roman", Times, serif;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
-        }
-
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 0.5em;
-            font-weight: normal;
-        }
-
-        h2 {
-            font-size: 1.3em;
-            margin-top: 2em;
-            margin-bottom: 0.5em;
-            font-weight: normal;
-        }
-
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        hr {
-            border: none;
-            text-align: center;
-            margin: 2em 0;
-        }
-
-        hr::before {
-            content: "* * *";
-            color: #999;
-        }
-
-        .divider {
-            text-align: center;
-            color: #999;
-            margin: 2em 0;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 0.5em;
-        }
-
-        footer {
-            margin-top: 3em;
-            padding-top: 1em;
-            border-top: 1px solid #ddd;
-            font-size: 0.9em;
-            color: #666;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1>CodeReclaimers, LLC</h1>
+    <div class="site-header">
+        <h1>CodeReclaimers, LLC</h1>
+        <p>Custom software development, AI/ML, and applied mathematics consulting</p>
+    </div>
 
-    <p>Providing custom software development, software project rescue, high-performance
-    numerical computing (C, C++, Python, GPGPU), AI/machine learning, and applied
-    mathematics consulting.</p>
+    <div class="content">
+        <p>Providing custom software development, software project rescue, high-performance
+        numerical computing (C, C++, Python, GPGPU), AI/machine learning, and applied
+        mathematics consulting.</p>
 
-    <p>See my <a href="https://codereclaimers.com/resume/">résumé</a> for more information.</p>
+        <p>See my <a href="https://codereclaimers.com/resume/">r&eacute;sum&eacute;</a> for more information.</p>
 
-    <h2>Blog Posts</h2>
+        <h2>Blog Posts</h2>
 
-    <ul>
-        <li><a href="/blog/sketchbridge-alpha.html">Announcing SketchBridge Alpha</a> - February 2, 2026</li>
-        <li><a href="/blog/openclaw-vm-setup.html">Setting Up OpenClaw in an Isolated VM</a> - February 2, 2026</li>
-        <li><a href="/blog/openclaw-local-vs-cloud-models.html">Local Models vs Cloud: A Tool-Calling Reality Check</a> - February 2, 2026</li>
-        <li><a href="/blog/openclaw-operations.html">Running OpenClaw: Security, Automation & Maintenance</a> - February 2, 2026</li>
-    </ul>
+        <ul class="blog-list">
+            <li><a href="/blog/sketchbridge-alpha.html">Announcing SketchBridge Alpha</a> <span class="post-date">- February 2, 2026</span></li>
+            <li><a href="/blog/openclaw-vm-setup.html">Setting Up OpenClaw in an Isolated VM</a> <span class="post-date">- February 2, 2026</span></li>
+            <li><a href="/blog/openclaw-local-vs-cloud-models.html">Local Models vs Cloud: A Tool-Calling Reality Check</a> <span class="post-date">- February 2, 2026</span></li>
+            <li><a href="/blog/openclaw-operations.html">Running OpenClaw: Security, Automation & Maintenance</a> <span class="post-date">- February 2, 2026</span></li>
+        </ul>
 
-    <div class="divider">- - -</div>
+        <div class="divider">- - -</div>
 
-    <h2>NEAT-python</h2>
+        <h2>NEAT-python</h2>
 
-    <p>A pure Python implementation of NEAT (NeuroEvolution of Augmenting Topologies).</p>
+        <p>A pure Python implementation of NEAT (NeuroEvolution of Augmenting Topologies).</p>
 
-    <ul>
-        <li><a href="https://github.com/CodeReclaimers/neat-python">GitHub project</a></li>
-        <li><a href="https://scholar.google.com/scholar?hl=en&as_sdt=0%2C34&q=%22neat-python%22+%22codereclaimers%22&btnG=">Citations on Google Scholar</a></li>
-    </ul>
+        <ul>
+            <li><a href="https://github.com/CodeReclaimers/neat-python">GitHub project</a></li>
+            <li><a href="https://scholar.google.com/scholar?hl=en&as_sdt=0%2C34&q=%22neat-python%22+%22codereclaimers%22&btnG=">Citations on Google Scholar</a></li>
+        </ul>
 
-    <h2>Morphe</h2>
+        <h2>Morphe</h2>
 
-    <p>A platform-agnostic framework for representing 2D sketch geometry and constraints
-    in a standardized format. Morphe enables sketches created in one CAD system to be
-    transferred, stored, and manipulated in others without loss of information. Includes
-    adapters for FreeCAD, Autodesk Fusion 360, SolidWorks, and Autodesk Inventor.</p>
+        <p>A platform-agnostic framework for representing 2D sketch geometry and constraints
+        in a standardized format. Morphe enables sketches created in one CAD system to be
+        transferred, stored, and manipulated in others without loss of information. Includes
+        adapters for FreeCAD, Autodesk Fusion 360, SolidWorks, and Autodesk Inventor.</p>
 
-    <ul>
-        <li><a href="https://github.com/CodeReclaimers/morphe">GitHub project</a></li>
-    </ul>
+        <ul>
+            <li><a href="https://github.com/CodeReclaimers/morphe">GitHub project</a></li>
+        </ul>
 
-    <h2>SketchBridge</h2>
+        <h2>SketchBridge</h2>
 
-    <p>A desktop application for transferring 2D sketches across multiple CAD platforms.
-    Built on top of Morphe, SketchBridge provides a graphical interface for exporting
-    sketches from one CAD system and importing them into another, with support for
-    visual preview and geometric transformations.</p>
+        <p>A desktop application for transferring 2D sketches across multiple CAD platforms.
+        Built on top of Morphe, SketchBridge provides a graphical interface for exporting
+        sketches from one CAD system and importing them into another, with support for
+        visual preview and geometric transformations.</p>
 
-    <ul>
-        <li><a href="https://github.com/CodeReclaimers/sketch_bridge">GitHub project</a></li>
-    </ul>
+        <ul>
+            <li><a href="https://github.com/CodeReclaimers/sketch_bridge">GitHub project</a></li>
+        </ul>
+    </div>
 
-    <footer>
+    <div class="site-footer">
         <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
-    </footer>
+    </div>
 </body>
 </html>

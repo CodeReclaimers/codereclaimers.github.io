@@ -4,142 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Models vs Cloud: A Tool-Calling Reality Check - CodeReclaimers</title>
-    <style>
-        body {
-            font-family: Georgia, "Times New Roman", Times, serif;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
-        }
-
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 0.5em;
-            font-weight: normal;
-        }
-
-        h2 {
-            font-size: 1.3em;
-            margin-top: 2em;
-            margin-bottom: 0.5em;
-            font-weight: normal;
-        }
-
-        h3 {
-            font-size: 1.1em;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            font-weight: normal;
-        }
-
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .date {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 2em;
-        }
-
-        .back-link {
-            margin-bottom: 2em;
-            display: block;
-        }
-
-        pre {
-            background-color: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 1em;
-            overflow-x: auto;
-            font-size: 0.9em;
-        }
-
-        code {
-            font-family: "Consolas", "Monaco", monospace;
-            background-color: #f5f5f5;
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
-
-        pre code {
-            background-color: transparent;
-            padding: 0;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 1em 0;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 0.5em;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f5f5f5;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 0.5em;
-        }
-
-        .series-nav {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 1em;
-            margin: 2em 0;
-            border-radius: 4px;
-        }
-
-        .series-nav strong {
-            display: block;
-            margin-bottom: 0.5em;
-        }
-
-        footer {
-            margin-top: 3em;
-            padding-top: 1em;
-            border-top: 1px solid #ddd;
-            font-size: 0.9em;
-            color: #666;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 </head>
 <body>
-    <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+    <div class="site-header">
+        <h1><a href="/">CodeReclaimers, LLC</a></h1>
+    </div>
 
-    <h1>Local Models vs Cloud: A Tool-Calling Reality Check</h1>
-    <p class="date">February 2, 2026</p>
+    <div class="content">
+        <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
 
-    <p>After getting OpenClaw running in a VM (see
-    <a href="/blog/openclaw-vm-setup.html">Part 1</a>), I set out to use local
-    LLMs via Ollama. What followed was an educational journey through the current
-    limitations of local model tool-calling.</p>
+        <h1>Local Models vs Cloud: A Tool-Calling Reality Check</h1>
+        <p class="date">February 2, 2026</p>
 
-    <h2>The Memory Search API Key Problem</h2>
+        <p>After getting OpenClaw running in a VM (see
+        <a href="/blog/openclaw-vm-setup.html">Part 1</a>), I set out to use local
+        LLMs via Ollama. What followed was an educational journey through the current
+        limitations of local model tool-calling.</p>
 
-    <p>The first issue: OpenClaw's <code>memory_search</code> tool requires embeddings,
-    which by default need an OpenAI API key. I tried several approaches:</p>
+        <h2>The Memory Search API Key Problem</h2>
 
-    <h3>Option 1: Disable the memory plugin entirely</h3>
+        <p>The first issue: OpenClaw's <code>memory_search</code> tool requires embeddings,
+        which by default need an OpenAI API key. I tried several approaches:</p>
+
+        <h3>Option 1: Disable the memory plugin entirely</h3>
 
 <pre><code>{
   "plugins": {
@@ -149,7 +38,7 @@
   }
 }</code></pre>
 
-    <h3>Option 2: Use local embeddings</h3>
+        <h3>Option 2: Use local embeddings</h3>
 
 <pre><code>{
   "agents": {
@@ -161,33 +50,33 @@
   }
 }</code></pre>
 
-    <p>I also tried configuring Ollama for embeddings, but the <code>memorySearch.provider</code>
-    only accepts <code>"openai"</code> or <code>"local"</code>, not custom endpoints.</p>
+        <p>I also tried configuring Ollama for embeddings, but the <code>memorySearch.provider</code>
+        only accepts <code>"openai"</code> or <code>"local"</code>, not custom endpoints.</p>
 
-    <h2>Model Tool-Calling Issues</h2>
+        <h2>Model Tool-Calling Issues</h2>
 
-    <p>With memory sorted, I tested multiple local models. All had issues with OpenClaw's
-    complex tool schemas:</p>
+        <p>With memory sorted, I tested multiple local models. All had issues with OpenClaw's
+        complex tool schemas:</p>
 
-    <table>
-        <tr><th>Model</th><th>Result</th></tr>
-        <tr><td><code>qwen2.5:32b</code></td><td>Called tools but with wrong parameters</td></tr>
-        <tr><td><code>qwen3:30b-a3b</code></td><td>Reasoning model, tool format issues</td></tr>
-        <tr><td><code>gemma3:27b-it-qat</code></td><td><strong>"does not support tools"</strong> error</td></tr>
-        <tr><td><code>qwen2.5-coder:14b</code></td><td>Still had parameter issues</td></tr>
-    </table>
+        <table>
+            <tr><th>Model</th><th>Result</th></tr>
+            <tr><td><code>qwen2.5:32b</code></td><td>Called tools but with wrong parameters</td></tr>
+            <tr><td><code>qwen3:30b-a3b</code></td><td>Reasoning model, tool format issues</td></tr>
+            <tr><td><code>gemma3:27b-it-qat</code></td><td><strong>"does not support tools"</strong> error</td></tr>
+            <tr><td><code>qwen2.5-coder:14b</code></td><td>Still had parameter issues</td></tr>
+        </table>
 
-    <p>The Gemma3 error was explicit:</p>
+        <p>The Gemma3 error was explicit:</p>
 
 <pre><code>"errorMessage": "400 registry.ollama.ai/library/gemma3:27b-it-qat does not support tools"</code></pre>
 
-    <p>The Qwen models had a subtler problem: they would recognize they needed to call
-    a tool but send empty <code>{}</code> for complex nested parameters like cron job
-    specifications. They'd get stuck in loops trying repeatedly with the same empty parameters.</p>
+        <p>The Qwen models had a subtler problem: they would recognize they needed to call
+        a tool but send empty <code>{}</code> for complex nested parameters like cron job
+        specifications. They'd get stuck in loops trying repeatedly with the same empty parameters.</p>
 
-    <h2>Trying Cloud Models</h2>
+        <h2>Trying Cloud Models</h2>
 
-    <p>I switched to OpenCode Zen as the primary provider:</p>
+        <p>I switched to OpenCode Zen as the primary provider:</p>
 
 <pre><code>{
   "agents": {
@@ -200,23 +89,23 @@
   }
 }</code></pre>
 
-    <h3>Rate Limiting with Free Tier</h3>
+        <h3>Rate Limiting with Free Tier</h3>
 
-    <p>The free tier (<code>opencode/kimi-k2.5-free</code>) hit rate limits quickly:</p>
+        <p>The free tier (<code>opencode/kimi-k2.5-free</code>) hit rate limits quickly:</p>
 
 <pre><code>"errorMessage": "429 Request didn't generate first token before the given deadline, the service is overloaded"</code></pre>
 
-    <p>Switching to the paid tier <code>opencode/kimi-k2.5</code> resolved this.</p>
+        <p>Switching to the paid tier <code>opencode/kimi-k2.5</code> resolved this.</p>
 
-    <h3>Kimi Still Struggled with Complex Tools</h3>
+        <h3>Kimi Still Struggled with Complex Tools</h3>
 
-    <p>Even the cloud Kimi model had issues with complex tool schemas. When trying to
-    add cron jobs, it repeatedly sent empty job objects despite its "thinking" showing
-    it knew what parameters were needed.</p>
+        <p>Even the cloud Kimi model had issues with complex tool schemas. When trying to
+        add cron jobs, it repeatedly sent empty job objects despite its "thinking" showing
+        it knew what parameters were needed.</p>
 
-    <h2>The Solution: Claude Haiku</h2>
+        <h2>The Solution: Claude Haiku</h2>
 
-    <p>I finally switched to <code>opencode/claude-haiku-4-5</code> for reliable tool calling:</p>
+        <p>I finally switched to <code>opencode/claude-haiku-4-5</code> for reliable tool calling:</p>
 
 <pre><code>{
   "agents": {
@@ -229,45 +118,46 @@
   }
 }</code></pre>
 
-    <p>This worked reliably. The local Ollama model serves as a fallback for simpler
-    tasks or when the cloud is unavailable.</p>
+        <p>This worked reliably. The local Ollama model serves as a fallback for simpler
+        tasks or when the cloud is unavailable.</p>
 
-    <h2>Lessons Learned</h2>
+        <h2>Lessons Learned</h2>
 
-    <ol>
-        <li><strong>Local model tool-calling is immature.</strong> Even capable models
-        like Qwen 2.5 32B struggle with complex nested tool schemas. Simple chat works;
-        complex agentic workflows don't.</li>
+        <ol>
+            <li><strong>Local model tool-calling is immature.</strong> Even capable models
+            like Qwen 2.5 32B struggle with complex nested tool schemas. Simple chat works;
+            complex agentic workflows don't.</li>
 
-        <li><strong>Ollama tool support varies by model.</strong> Some models (Gemma3)
-        explicitly don't support tools. Check before assuming.</li>
+            <li><strong>Ollama tool support varies by model.</strong> Some models (Gemma3)
+            explicitly don't support tools. Check before assuming.</li>
 
-        <li><strong>Memory search requires embeddings.</strong> Either disable it, use
-        local embeddings, or accept the OpenAI API key requirement.</li>
+            <li><strong>Memory search requires embeddings.</strong> Either disable it, use
+            local embeddings, or accept the OpenAI API key requirement.</li>
 
-        <li><strong>Claude models handle tools reliably.</strong> When tool-calling
-        reliability matters, Claude (even Haiku) is a safer choice than experimental
-        alternatives.</li>
-    </ol>
+            <li><strong>Claude models handle tools reliably.</strong> When tool-calling
+            reliability matters, Claude (even Haiku) is a safer choice than experimental
+            alternatives.</li>
+        </ol>
 
-    <h2>Final Model Configuration</h2>
+        <h2>Final Model Configuration</h2>
 
-    <table>
-        <tr><th>Component</th><th>Value</th></tr>
-        <tr><td>Primary Model</td><td><code>opencode/claude-haiku-4-5</code></td></tr>
-        <tr><td>Fallback Model</td><td><code>ollama/qwen2.5-coder:14b</code></td></tr>
-        <tr><td>Memory Search</td><td>Disabled</td></tr>
-    </table>
+        <table>
+            <tr><th>Component</th><th>Value</th></tr>
+            <tr><td>Primary Model</td><td><code>opencode/claude-haiku-4-5</code></td></tr>
+            <tr><td>Fallback Model</td><td><code>ollama/qwen2.5-coder:14b</code></td></tr>
+            <tr><td>Memory Search</td><td>Disabled</td></tr>
+        </table>
 
-    <div class="series-nav">
-        <strong>OpenClaw VM Setup Series</strong>
-        Part 1: <a href="/blog/openclaw-vm-setup.html">Setting Up OpenClaw in an Isolated VM</a><br>
-        Part 2: Local Models vs Cloud: A Tool-Calling Reality Check (this post)<br>
-        Part 3: <a href="/blog/openclaw-operations.html">Running OpenClaw: Security, Automation & Maintenance</a>
+        <div class="series-nav">
+            <strong>OpenClaw VM Setup Series</strong>
+            Part 1: <a href="/blog/openclaw-vm-setup.html">Setting Up OpenClaw in an Isolated VM</a><br>
+            Part 2: Local Models vs Cloud: A Tool-Calling Reality Check (this post)<br>
+            Part 3: <a href="/blog/openclaw-operations.html">Running OpenClaw: Security, Automation & Maintenance</a>
+        </div>
+
+        <footer>
+            <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+        </footer>
     </div>
-
-    <footer>
-        <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
-    </footer>
 </body>
 </html>
