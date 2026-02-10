@@ -17,7 +17,7 @@ body {
     padding: 32px 20px;
 }
 
-.site-header h1 {
+.site-header .site-title {
     font-family: 'Open Sans', Helvetica, Arial, sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -255,7 +255,7 @@ img {
         padding: 24px 16px;
     }
 
-    .site-header h1 {
+    .site-header .site-title {
         font-size: 1.5em;
     }
 }

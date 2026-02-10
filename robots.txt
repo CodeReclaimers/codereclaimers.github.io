@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://codereclaimers.github.io/sitemap.xml
