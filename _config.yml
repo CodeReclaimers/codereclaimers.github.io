@@ -5,3 +5,6 @@ url: "https://codereclaimers.github.io"
 
 # Build settings
 markdown: kramdown
+
+exclude:
+  - CLAUDE.md
