@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Add an AI Support Agent to Your Website - CodeReclaimers</title>
+    <meta name="description" content="Embedding a Recursive support agent on your website is as simple as pasting an iframe snippet. Here's a step-by-step guide covering domain allowlisting, sizing, positioning, and troubleshooting.">
+    <link rel="canonical" href="https://codereclaimers.github.io/blog/embedding-support-agent.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="How to Add an AI Support Agent to Your Website">
+    <meta property="og:description" content="Embedding a Recursive support agent on your website is as simple as pasting an iframe snippet. Here's a step-by-step guide covering domain allowlisting, sizing, positioning, and troubleshooting.">
+    <meta property="og:url" content="https://codereclaimers.github.io/blog/embedding-support-agent.html">
+    <meta property="og:site_name" content="CodeReclaimers">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2026-02-17">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How to Add an AI Support Agent to Your Website">
+    <meta name="twitter:description" content="Embedding a Recursive support agent on your website is as simple as pasting an iframe snippet. Here's a step-by-step guide covering domain allowlisting, sizing, positioning, and troubleshooting.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "How to Add an AI Support Agent to Your Website",
+        "datePublished": "2026-02-17",
+        "author": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://codereclaimers.github.io/blog/embedding-support-agent.html"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="site-header">
+        <p class="site-title"><a href="/">CodeReclaimers, LLC</a></p>
+    </div>
+
+    <div class="content">
+        <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+        <h1>How to Add an AI Support Agent to Your Website (It&rsquo;s Easier Than You Think)</h1>
+        <p class="date">February 17, 2026</p>
+
+        <p>If you&rsquo;ve been thinking about adding AI support to your website but assumed it would require a developer or some complicated integration, I have good news: embedding a Recursive support agent is about as simple as embedding a YouTube video. You copy a snippet of HTML, paste it where you want the agent to appear, and you&rsquo;re done. The hardest part is deciding where on your page to put it.</p>
+
+        <p>I&rsquo;m going to walk you through the whole process, including the one prerequisite step (getting your domain allowlisted), what the basic embed looks like, and a few common ways to size and position the agent depending on your site&rsquo;s layout. By the end of this, you&rsquo;ll have a working AI support agent on your site, and you won&rsquo;t need to touch any backend code or mess with JavaScript.</p>
+
+        <h2>What You&rsquo;re Actually Embedding</h2>
+
+        <p>The Recursive agent runs as a standalone web page that you embed in an <code>&lt;iframe&gt;</code> &mdash; essentially a window into another webpage, sitting inside yours. The agent handles everything internally: the chat interface, the AI responses, the conversation history. Your job is just to give it space on your page.</p>
+
+        <p>The agent adapts to whatever dimensions you give it. If you make the iframe 400 pixels wide, the agent compresses its layout to fit. If you give it 800 pixels, it spreads out. The conversation scrolls vertically inside the frame when it gets long, so users never lose access to earlier messages &mdash; they just scroll up.</p>
+
+        <p>Here&rsquo;s what it looks like in practice (this is a real embed, not a screenshot):</p>
+
+<pre><code>&lt;iframe
+  src="https://acme.recursive.support/"
+  title="Support Agent"
+  style="width: 100%; height: 600px; border: none; border-radius: 12px;"
+  allow="clipboard-write"
+&gt;&lt;/iframe&gt;</code></pre>
+
+        <p>That&rsquo;s the complete code. Replace <code>acme.recursive.support</code> with your agent&rsquo;s actual URL, and you have a working support agent.</p>
+
+        <h2>Step 1: Get Your Domain Allowlisted (The One Prerequisite)</h2>
+
+        <p>Before the embed will work, you need to email us at <strong>hello@recursive.support</strong> with the exact domain(s) where you&rsquo;re planning to put the agent. For example:</p>
+
+<pre><code>https://example.com
+https://www.example.com</code></pre>
+
+        <p>Include both the <code>www</code> and non-<code>www</code> versions if your site uses both &mdash; they&rsquo;re treated as separate origins by browsers. If you&rsquo;re embedding on a subdomain (like <code>support.example.com</code>), include that too.</p>
+
+        <p>We&rsquo;ll add your domains to the agent&rsquo;s configuration and deploy the update. This usually takes a few minutes. Once it&rsquo;s done, the embed will work.</p>
+
+        <p><strong>Why this step exists:</strong> Your agent sends a security header (<code>Content-Security-Policy: frame-ancestors</code>) that tells browsers which sites are allowed to embed it. Without your domain in that list, browsers refuse to load the iframe &mdash; they&rsquo;ll show a blank frame or a &ldquo;refused to connect&rdquo; error. This is a security feature, not a bug. It prevents someone from embedding your agent on their site and impersonating your support.</p>
+
+        <p>If you try to embed before we&rsquo;ve allowlisted your domain, it won&rsquo;t work. Email us first, wait for confirmation, then proceed.</p>
+
+        <h2>Step 2: Add the Embed Code</h2>
+
+        <p>Once your domain is allowlisted, copy this snippet and paste it into your page&rsquo;s HTML wherever you want the agent to appear:</p>
+
+<pre><code>&lt;iframe
+  src="https://acme.recursive.support/"
+  title="Support Agent"
+  style="width: 100%; height: 600px; border: none; border-radius: 12px;"
+  allow="clipboard-write"
+&gt;&lt;/iframe&gt;</code></pre>
+
+        <p>Replace <code>acme.recursive.support</code> with your actual agent URL (it will be <code>yourcompanyname.recursive.support</code>).</p>
+
+        <p>That&rsquo;s it. Save the page, load it in a browser, and you should see the agent.</p>
+
+        <h3>What the Attributes Do</h3>
+
+        <ul>
+            <li><code>src</code>: The URL of your agent. This is the only part you need to customize.</li>
+            <li><code>title</code>: Accessibility label for screen readers. Leave this as-is.</li>
+            <li><code>style</code>: Controls the size and appearance. <code>width: 100%</code> makes it fill its container horizontally, <code>height: 600px</code> gives it a fixed height, <code>border: none</code> removes the default iframe border, and <code>border-radius: 12px</code> rounds the corners slightly.</li>
+            <li><code>allow="clipboard-write"</code>: Lets users copy text from the agent&rsquo;s responses. Without this, the copy button won&rsquo;t work. (Browsers block clipboard access by default in iframes for security reasons; this attribute explicitly permits it.)</li>
+        </ul>
+
+        <h2>Sizing and Positioning</h2>
+
+        <p>The agent fills whatever space the iframe gives it. You control the size entirely from your side by changing the iframe&rsquo;s <code>width</code> and <code>height</code> in the <code>style</code> attribute. Here are a few common patterns.</p>
+
+        <h3>Fixed Height (Simplest Approach)</h3>
+
+        <p>If you just want to drop the agent into your page and not think about it, use a fixed height:</p>
+
+<pre><code>&lt;iframe
+  src="https://acme.recursive.support/"
+  title="Support Agent"
+  style="width: 100%; height: 600px; border: none;"
+  allow="clipboard-write"
+&gt;&lt;/iframe&gt;</code></pre>
+
+        <p>600 pixels is a good starting point &mdash; tall enough for a meaningful conversation without dominating the page. The chat scrolls vertically inside the frame when the conversation gets longer, so users won&rsquo;t lose access to earlier messages.</p>
+
+        <h3>Sidebar or Panel</h3>
+
+        <p>If you want the agent to sit in a fixed sidebar on the right side of the screen, wrap the iframe in a positioned container:</p>
+
+<pre><code>&lt;div style="width: 400px; height: 100vh; position: fixed; right: 0; top: 0; box-shadow: -2px 0 8px rgba(0,0,0,0.1);"&gt;
+  &lt;iframe
+    src="https://acme.recursive.support/"
+    title="Support Agent"
+    style="width: 100%; height: 100%; border: none;"
+    allow="clipboard-write"
+  &gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+        <p><code>100vh</code> means &ldquo;100% of the viewport height&rdquo; &mdash; the sidebar will stretch from the top of the browser window to the bottom, regardless of how tall the page content is.</p>
+
+        <h3>Centered Container with Maximum Width</h3>
+
+        <p>If you want the agent centered on the page with a maximum width (common for dedicated support pages):</p>
+
+<pre><code>&lt;div style="width: 100%; max-width: 700px; height: 80vh; margin: 0 auto;"&gt;
+  &lt;iframe
+    src="https://acme.recursive.support/"
+    title="Support Agent"
+    style="width: 100%; height: 100%; border: none; border-radius: 12px;"
+    allow="clipboard-write"
+  &gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+        <p><code>80vh</code> means &ldquo;80% of the viewport height&rdquo; &mdash; it scales with the browser window size. <code>margin: 0 auto</code> centers the container horizontally.</p>
+
+        <h3>Responsive Height with CSS</h3>
+
+        <p>If you want more control over how the height adapts to different screen sizes, you can define a CSS class:</p>
+
+<pre><code>&lt;style&gt;
+  .agent-embed {
+    width: 100%;
+    height: 70vh;
+    min-height: 400px;
+    max-height: 800px;
+    border: none;
+    border-radius: 12px;
+  }
+&lt;/style&gt;
+
+&lt;iframe
+  class="agent-embed"
+  src="https://acme.recursive.support/"
+  title="Support Agent"
+  allow="clipboard-write"
+&gt;&lt;/iframe&gt;</code></pre>
+
+        <p>This sets the height to 70% of the viewport, but never smaller than 400px or larger than 800px. It adapts gracefully to different devices without getting too cramped on phones or absurdly tall on large monitors.</p>
+
+        <h2>Minimum Dimensions</h2>
+
+        <p>The agent is responsive down to about 300 pixels wide, but it starts to feel cramped below 400px. Recommended minimums:</p>
+
+        <ul>
+            <li><strong>Width:</strong> 300px absolute minimum, 400px+ recommended</li>
+            <li><strong>Height:</strong> 400px minimum, 600px+ recommended</li>
+        </ul>
+
+        <p>On narrow screens (under 600px wide), the agent automatically compacts its layout &mdash; the header shrinks, chat bubbles get wider, padding reduces &mdash; to use the available space efficiently. It works on mobile, but it&rsquo;s more comfortable with a bit more room.</p>
+
+        <h2>Styling the Container</h2>
+
+        <p>You can&rsquo;t style what&rsquo;s inside the iframe from your CSS (the iframe is a security boundary &mdash; your page&rsquo;s CSS doesn&rsquo;t reach into it), but you can style the container around it. If you want a border, shadow, or background, wrap the iframe in a <code>&lt;div&gt;</code>:</p>
+
+<pre><code>&lt;div style="
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  height: 600px;
+  margin: 2rem auto;
+"&gt;
+  &lt;iframe
+    src="https://acme.recursive.support/"
+    title="Support Agent"
+    style="width: 100%; height: 100%; border: none;"
+    allow="clipboard-write"
+  &gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+        <p><strong>Tip:</strong> Apply <code>border-radius</code> to the wrapping div, not the iframe. Use <code>overflow: hidden</code> on the wrapper to clip the iframe&rsquo;s corners cleanly. This produces more consistent results across browsers.</p>
+
+        <h2>Common Layouts</h2>
+
+        <h3>Two-Column Layout (Agent Alongside Content)</h3>
+
+        <p>If you want the agent in a sidebar next to your main content:</p>
+
+<pre><code>&lt;div style="display: flex; gap: 2rem; max-width: 1200px; margin: 0 auto;"&gt;
+  &lt;div style="flex: 1;"&gt;
+    &lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+    &lt;p&gt;Check out our FAQ below, or ask the AI agent on the right...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div style="width: 400px; flex-shrink: 0;"&gt;
+    &lt;iframe
+      src="https://acme.recursive.support/"
+      title="Support Agent"
+      style="width: 100%; height: 600px; border: none; border-radius: 12px;"
+      allow="clipboard-write"
+    &gt;&lt;/iframe&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <p>The <code>flex: 1</code> on the left div makes it take up remaining space. The <code>width: 400px; flex-shrink: 0</code> on the right div keeps the agent at a fixed width.</p>
+
+        <h3>Pop-Up / Modal</h3>
+
+        <p>If you want the agent to appear in a modal when users click a button:</p>
+
+<pre><code>&lt;style&gt;
+  .agent-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  .agent-modal-backdrop.open { display: flex; }
+  .agent-modal {
+    width: 90%;
+    max-width: 500px;
+    height: 70vh;
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+  }
+  .agent-modal iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+&lt;/style&gt;
+
+&lt;button onclick="document.getElementById('agent-modal').classList.add('open')"&gt;
+  Need help? Chat with us
+&lt;/button&gt;
+
+&lt;div id="agent-modal" class="agent-modal-backdrop"
+     onclick="if(event.target===this) this.classList.remove('open')"&gt;
+  &lt;div class="agent-modal"&gt;
+    &lt;iframe
+      src="https://acme.recursive.support/"
+      title="Support Agent"
+      allow="clipboard-write"
+    &gt;&lt;/iframe&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <p>Clicking the button adds the <code>open</code> class to the backdrop, which makes it visible. Clicking outside the modal (on the backdrop itself) closes it.</p>
+
+        <h2>Troubleshooting</h2>
+
+        <p>Here are the most common issues and how to fix them:</p>
+
+        <p><strong>Problem: The iframe is blank or shows &ldquo;refused to connect&rdquo;</strong><br>
+        <strong>Cause:</strong> Your domain isn&rsquo;t in the allowlist yet.<br>
+        <strong>Fix:</strong> Email hello@recursive.support with your exact domain(s), including <code>https://</code> and whether you use <code>www</code> or not. Wait for confirmation before testing again.</p>
+
+        <p><strong>Problem: The agent looks tiny or cramped</strong><br>
+        <strong>Cause:</strong> The iframe is too small.<br>
+        <strong>Fix:</strong> Increase the <code>width</code> and <code>height</code> in the iframe&rsquo;s <code>style</code> attribute. Try at least 400px wide and 600px tall.</p>
+
+        <p><strong>Problem: There&rsquo;s a horizontal scrollbar inside the iframe</strong><br>
+        <strong>Cause:</strong> This is unlikely &mdash; the agent prevents horizontal scrolling on its end &mdash; but if you see one, check your container CSS.<br>
+        <strong>Fix:</strong> Make sure the iframe&rsquo;s parent has <code>overflow: hidden</code> or <code>overflow: auto</code>, and that the iframe itself has <code>width: 100%</code>.</p>
+
+        <p><strong>Problem: Clicking inside the agent doesn&rsquo;t focus the input field</strong><br>
+        <strong>Cause:</strong> This is normal browser behavior for iframes &mdash; they require an explicit click to receive focus.<br>
+        <strong>Fix:</strong> Not really a problem. Users click once inside the frame, and then everything works normally. (This is a security feature browsers enforce; there&rsquo;s no way to override it.)</p>
+
+        <p><strong>Problem: Browser shows a &ldquo;mixed content&rdquo; warning</strong><br>
+        <strong>Cause:</strong> Your page is served over HTTP, but the agent is HTTPS. Browsers block this.<br>
+        <strong>Fix:</strong> Serve your page over HTTPS. (If you&rsquo;re on a platform like WordPress or Shopify, this is usually a one-click setting in your admin panel.)</p>
+
+        <h2>WordPress-Specific Instructions</h2>
+
+        <p>If you&rsquo;re using WordPress, you can embed the agent in a few different ways:</p>
+
+        <ol>
+            <li><strong>In a page or post:</strong> Switch to the &ldquo;Custom HTML&rdquo; block, paste the iframe code, and publish.</li>
+            <li><strong>In a sidebar widget:</strong> Go to Appearance &rarr; Widgets, add a &ldquo;Custom HTML&rdquo; widget to your sidebar, paste the iframe code.</li>
+            <li><strong>Site-wide in the footer:</strong> Go to Appearance &rarr; Customize &rarr; Additional CSS, and add a fixed position container (like the sidebar example above). Then use a Custom HTML widget in your footer to hold the iframe.</li>
+        </ol>
+
+        <p>Most page builders (Elementor, Divi, etc.) have an &ldquo;HTML&rdquo; or &ldquo;Code&rdquo; element where you can paste the iframe directly.</p>
+
+        <h2>Security Notes</h2>
+
+        <p>A few things worth knowing about how the embed works:</p>
+
+        <ul>
+            <li>The agent only loads on domains you&rsquo;ve explicitly approved. If you move to a new domain or add a subdomain, let us know so we can update the allowlist.</li>
+            <li>The iframe is sandboxed by the browser &mdash; the agent can&rsquo;t access your page&rsquo;s cookies, localStorage, or JavaScript, and your page can&rsquo;t access the agent&rsquo;s internals. This is standard browser security for cross-origin iframes. It means the embed is safe even if your site and the agent are on completely different infrastructure.</li>
+            <li>The <code>allow="clipboard-write"</code> attribute is optional but recommended. It lets users copy text from the agent&rsquo;s responses. Without it, the copy button won&rsquo;t work.</li>
+        </ul>
+
+        <h2>That&rsquo;s It</h2>
+
+        <p>You now have an AI support agent on your website. The whole process is: email us your domain, wait for confirmation, paste the iframe code, adjust the size to fit your layout. If you run into issues or want help picking the right layout for your site, email <strong>hello@recursive.support</strong> and we&rsquo;ll walk you through it.</p>
+
+        <p>If you don&rsquo;t have a Recursive agent yet and want to see what it&rsquo;s like, visit <a href="https://recursive.support">recursive.support</a> to get started. Setup takes about 10 minutes, and you can have a working agent answering questions from your documentation by the end of the day.</p>
+
+        <footer>
+            <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+        </footer>
+    </div>
+</body>
+</html>
