@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Personality Model That Writes About Itself - CodeReclaimers</title>
+    <meta name="description" content="How I turned 20 years of email, forum posts, and chat logs into a personality model that can write in my voice -- and the recursive absurdity of using it to write about itself.">
+    <link rel="canonical" href="https://codereclaimers.github.io/blog/gamma-corpus-personality-model.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Building a Personality Model That Writes About Itself">
+    <meta property="og:description" content="How I turned 20 years of email, forum posts, and chat logs into a personality model that can write in my voice -- and the recursive absurdity of using it to write about itself.">
+    <meta property="og:url" content="https://codereclaimers.github.io/blog/gamma-corpus-personality-model.html">
+    <meta property="og:site_name" content="CodeReclaimers">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2026-02-24">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Building a Personality Model That Writes About Itself">
+    <meta name="twitter:description" content="How I turned 20 years of email, forum posts, and chat logs into a personality model that can write in my voice -- and the recursive absurdity of using it to write about itself.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Building a Personality Model That Writes About Itself",
+        "datePublished": "2026-02-24",
+        "author": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://codereclaimers.github.io/blog/gamma-corpus-personality-model.html"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="site-header">
+        <p class="site-title"><a href="/">CodeReclaimers, LLC</a></p>
+        <nav class="site-nav">
+            <a href="https://codereclaimers.com">Main Site</a>
+            <a href="https://codereclaimers.com/resume/">R&eacute;sum&eacute;</a>
+        </nav>
+    </div>
+
+    <div class="content">
+        <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+        <h1>Building a Personality Model That Writes About Itself</h1>
+        <p class="date">February 24, 2026</p>
+
+        <p>There&rsquo;s a particular kind of recursive absurdity that appeals to me&mdash;the book about writing the book, the AI system that models a person well enough to write about the system that models them.  That&rsquo;s what the Gamma Corpus project became, and I think it&rsquo;s worth walking through how it got there, because the path was more interesting than the destination I originally had in mind.</p>
+
+        <h2>The Email Problem</h2>
+
+        <p>The project started with a practical question: I have roughly 20 years of email sitting in Google Takeout archives, and that email contains a pretty detailed record of how I think, argue, write, and make decisions.  Could I extract that into something structured enough to build a personality model from it?</p>
+
+        <p>The term &ldquo;gamma-level&rdquo; comes from Alastair Reynolds&rsquo; <em>Revelation Space</em>&mdash;a behavioral sketch that captures communication patterns and reasoning style without approaching anything like real consciousness.  The aspiration was to get from gamma (sounds right) toward beta (reasons right), using enough data and careful architecture.</p>
+
+        <p>Phase 1 was straightforward engineering: parse MBOX files into SQLite, reconstruct email threads, build a contact registry, run enrichment passes for noise detection and basic classification.  The personal Gmail archive alone was a 14.9 GB MBOX file&mdash;about 540,000 messages spanning October 2005 through February 2026.  Combined with the business Gmail and an older Thunderbird archive, the email database ended up at around 618,000 messages across 297,000 threads before non-email sources were added.  The vast majority of those turned out to be noise&mdash;automated notifications, mailing list traffic, political campaign emails, pharma spam&mdash;and identifying and filtering out the 92% noise to isolate the ~48,000 genuine messages underneath required about ten iterative filtering passes, each one targeting a different pattern.</p>
+
+        <h2>The Curation App</h2>
+
+        <p>You can&rsquo;t curate half a million messages from a SQLite prompt.  I built a local web application (FastAPI backend, React frontend) that turned out to be the workhorse of the whole project&mdash;a split-panel message browser with full-text search, keyboard shortcuts for rapid triage, batch operations with undo, and a tag management system that tracks the lifecycle from model-suggested through human-confirmed.</p>
+
+        <p>The keyboard shortcuts matter more than they sound.  When you&rsquo;re classifying thousands of messages, the difference between clicking a button and pressing <code>h</code> for &ldquo;high quality&rdquo; or <code>n</code> for &ldquo;noise&rdquo; adds up fast.  I ended up doing most of the noise triage in long sessions where I&rsquo;d filter by sender pattern, scan a few examples, and batch-mark entire categories&mdash;WordPress notifications (8,812 messages), Twitter (2,222), GitHub notifications (753), and so on down the long tail.</p>
+
+        <h2>The Generation Agent</h2>
+
+        <p>With the corpus structured and tagged, the next step was building something that could actually write in my voice.  The first version was a single-pass RAG pipeline: embed the corpus into ChromaDB using a local embedding model, retrieve stylistically similar examples for a given task, assemble them into a prompt with a personality system prompt, and call Claude.</p>
+
+        <p>The system prompt itself went through three major versions.  v1 was a rough sketch from the initial blind analysis.  v2 added quantified linguistic markers&mdash;things like &ldquo;uncertainty hedges appear at 4-6 per thousand words&rdquo; and &ldquo;confidence markers at 2.3-2.6 per thousand words&rdquo;&mdash;derived from statistical analysis of 14,405 messages spanning 1998 through 2026.  v3 added anti-fabrication guardrails after a sobering discovery I&rsquo;ll get to in a moment.</p>
+
+        <p>The A/B testing was revealing.  With corpus examples and the personality prompt, the output read like an engineer talking to peers&mdash;parenthetical asides, hedged estimates, dry humor, no bullet-point takeaway sections.  Without them, the same model produced conventional blog structure with bolded lessons and motivational closers.  The voice delta was clear and consistent.</p>
+
+        <h2>The Hallucination Problem</h2>
+
+        <p>Voice authenticity and content accuracy turned out to be orthogonal problems.  The voice was perfect; the facts were wrong.</p>
+
+        <p>The v2 prompt produced text that was stylistically indistinguishable from my actual writing&mdash;which made the fabricated content <em>more</em> dangerous, not less.  In one A/B test, the model invented an elaborate 4-stage RAG pipeline (embedding retrieval &rarr; BM25 keyword filtering &rarr; LLM re-ranking &rarr; answer generation) that doesn&rsquo;t exist.  It fabricated performance statistics, cost figures, and pipeline architecture with complete confidence, all wrapped in my characteristic hedging and conditional reasoning.</p>
+
+        <p>A reader familiar with my style would have had no stylistic cues to flag the content as fabricated.</p>
+
+        <p>The fix was a three-stage pipeline: generate a draft, then run an adversarial fact-checker (a separate model call with no personality prompt and no corpus access&mdash;intentionally different from the generator to avoid rationalizing the same fabrications), then conditionally revise based on the fact-check results.  I added a parallel copy editor that evaluates narrative structure and pacing as a cold reader.  Both reports feed into the revision stage, where fact-check issues are mandatory fixes and copy-edit issues are judgment calls.</p>
+
+        <p>v3 of the system prompt added explicit anti-fabrication instructions&mdash;&ldquo;never invent technical details, performance statistics, architecture descriptions, or implementation specifics not present in the source material&rdquo;&mdash;and the combination of prompt constraints plus adversarial fact-checking eliminated the wholesale fabrication problem.  Opus with v3 produced the cleanest output: no invented architecture, no fabricated statistics, accurate pricing numbers, and appropriate &ldquo;I don&rsquo;t know&rdquo; hedges.</p>
+
+        <h2>Beyond Email</h2>
+
+        <p>The corpus grew beyond email fairly quickly.  I imported 425 Slashdot comments (2003&ndash;2011), 258 Borland C++ Builder newsgroup posts (1998&ndash;2000), 3,049 Reddit comments across two accounts (2009&ndash;2026), 2,620 Claude.ai conversation messages, and 2,387 Claude Code CLI session logs.  Each source required its own import script and platform-specific body cleaning&mdash;Slashdot comments needed quote re-extraction from saved HTML because the original scraper had flattened the distinction between quoted parent text and my actual replies.</p>
+
+        <p>The non-email sources turned out to be disproportionately valuable for personality modeling.  Reddit and Slashdot comments are where opinions live&mdash;industry commentary, political positions, humor that doesn&rsquo;t appear in professional email.  Claude conversations capture how I frame problems and reason through architecture decisions in real time.  The Borland posts from 1998 suggest the voice was already largely formed at that point&mdash;the same conditional reasoning, the same parenthetical qualifications, the same dry humor.  If that&rsquo;s true, it means the personality model is capturing something genuinely stable rather than just fitting to recent patterns, which has interesting implications for how far this kind of modeling can go.</p>
+
+        <h2>The Worldview Pipeline</h2>
+
+        <p>Tone mimicry was effectively solved by the v3 system prompt.  But the system prompt is a cognitive style sheet&mdash;it describes <em>how</em> I communicate without encoding <em>what conclusions that reasoning has reached</em>.  Moving toward beta-level modeling required capturing attitudes, beliefs, and opinions.</p>
+
+        <p>I built a three-phase extraction pipeline: Haiku filters messages for belief-bearing content, Sonnet extracts structured belief records (domain, topic, position, confidence level), and Opus synthesizes per-domain summaries into a 9,742-word worldview document covering everything from institutional skepticism to pragmatic idealism to positions on AI and credentialism.  The extraction produced 4,530 beliefs across 9 domains; 4,511 of those matched existing messages and went into a stances table in the database and a dedicated section of the vector store, giving the agent semantic search across my actual positions on things.</p>
+
+        <p>What surprised me was how the worldview document changed the output.  A/B testing confirmed it produces meaningfully different editorial choices&mdash;not just style variation, but different decisions about what to emphasize and what to leave out.  The version with the worldview was shorter, more direct, and more opinionated.  It trusted the reader more.</p>
+
+        <h2>Retrieval Quality</h2>
+
+        <p>The most impactful late-stage improvement was cross-encoder re-ranking.  The initial retrieval used embedding distance from ChromaDB, which gets you in the right neighborhood but doesn&rsquo;t discriminate well between &ldquo;topically adjacent&rdquo; and &ldquo;actually relevant.&rdquo;  Inserting a cross-encoder (ms-marco-MiniLM-L-6-v2) between the vector search and the existing style/recency/diversity re-ranking added roughly 50 milliseconds of latency and meaningfully improved which examples the model actually saw.</p>
+
+        <p>I also ran a tag quality audit&mdash;having Sonnet blindly re-tag a stratified sample without seeing Haiku&rsquo;s assignments.  The key finding was that Haiku was under-tagging rather than over-tagging, which is the less dangerous direction.  Adding platform-specific guidance to the taxonomy prompt improved coverage for the non-email sources, particularly for persona classification where agreement had been weakest.</p>
+
+        <h2>The Book</h2>
+
+        <p>The system wrote a book.</p>
+
+        <p>The gamma agent&mdash;the tool-using version with dual-channel RAG, citation tracking, and iterative retrieval&mdash;generated all 15 sections of a book about building a SaaS platform in 16 days.  42,066 words, 524 citations back to source material.  The cost accounting depends on how you measure it&mdash;the Claude Console reported about $72 for the generation runs, though the full pipeline including retries and re-runs was higher.  I submitted it to KDP in both paperback and Kindle editions.</p>
+
+        <p>It&rsquo;s not a great book.  But the facts check out and it sounds like me, which was the point.  It&rsquo;s an interesting proof of concept for what a personality model can produce when you give it good source material and a reliable fact-checking pipeline.</p>
+
+        <h2>The Recursive Part</h2>
+
+        <p>The thing I keep coming back to is the recursion.  The system that models my personality was used to write about the system that models my personality.  The agent that retrieves my beliefs was asked to prioritize its own backlog&mdash;and it picked pragmatic improvements (better retrieval, daily practical use, don&rsquo;t crash) that are consistent with the values the worldview pipeline extracted from my writing.  The tag audit used a stronger model to check a weaker model&rsquo;s work on data that both models would eventually use to generate content in my voice.</p>
+
+        <p>The voice is solved.  The facts require ongoing vigilance.  The beliefs are captured but static&mdash;they&rsquo;ll drift as mine do, and there&rsquo;s no mechanism yet for the model to update its own worldview.  That seems like the next interesting problem.</p>
+
+        <p>Total project cost through the end of February 2026: somewhere around $400 in API calls, plus a lot of evenings.  The corpus contains 626,000 messages, 4,511 extracted beliefs, and a system prompt that knows I use double spaces after periods and will never write the word &ldquo;amazing.&rdquo;</p>
+
+        <footer>
+            <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+        </footer>
+    </div>
+</body>
+</html>

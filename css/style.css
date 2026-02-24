@@ -44,6 +44,15 @@ body {
     border-bottom-color: rgba(255,255,255,0.8);
 }
 
+.site-nav {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.site-nav a {
+    margin: 0 0.6em;
+}
+
 /* ===== Content Card ===== */
 .content {
     background-color: #fff;
