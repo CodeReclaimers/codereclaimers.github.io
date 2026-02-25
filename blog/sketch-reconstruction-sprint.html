@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Days, 25 Experiments: Optimizing a Sketch Reconstruction Pipeline - CodeReclaimers</title>
+    <meta name="description" content="Running 25 experiments over three days with Claude Code and Gemini Deep Think to optimize a sketch reconstruction pipeline, and what the rejection pattern revealed about detection-selection architectures.">
+    <link rel="canonical" href="https://codereclaimers.github.io/blog/sketch-reconstruction-sprint.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Three Days, 25 Experiments: Optimizing a Sketch Reconstruction Pipeline">
+    <meta property="og:description" content="Running 25 experiments over three days with Claude Code and Gemini Deep Think to optimize a sketch reconstruction pipeline, and what the rejection pattern revealed about detection-selection architectures.">
+    <meta property="og:url" content="https://codereclaimers.github.io/blog/sketch-reconstruction-sprint.html">
+    <meta property="og:site_name" content="CodeReclaimers">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2026-02-25">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Three Days, 25 Experiments: Optimizing a Sketch Reconstruction Pipeline">
+    <meta name="twitter:description" content="Running 25 experiments over three days with Claude Code and Gemini Deep Think to optimize a sketch reconstruction pipeline, and what the rejection pattern revealed about detection-selection architectures.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Source+Sans+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Three Days, 25 Experiments: Optimizing a Sketch Reconstruction Pipeline",
+        "datePublished": "2026-02-25",
+        "author": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CodeReclaimers, LLC",
+            "url": "https://codereclaimers.github.io"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://codereclaimers.github.io/blog/sketch-reconstruction-sprint.html"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="site-header">
+        <p class="site-title"><a href="/">CodeReclaimers, LLC</a></p>
+        <nav class="site-nav">
+            <a href="https://codereclaimers.com">Main Site</a>
+            <a href="https://codereclaimers.com/resume/">R&eacute;sum&eacute;</a>
+        </nav>
+    </div>
+
+    <div class="content">
+        <a href="/" class="back-link">&larr; Back to CodeReclaimers</a>
+
+        <h1>Three Days, 25 Experiments: Optimizing a Sketch Reconstruction Pipeline</h1>
+        <p class="date">February 25, 2026</p>
+
+        <p>I&rsquo;ve been running a workflow experiment for the last few months that I think is worth writing up, not because the results are earth-shattering, but because the <em>process</em> turned out to be more interesting than I expected.  The short version: I pointed two AI systems at a well-defined optimization problem&mdash;one analyzing data and proposing strategies, the other implementing and benchmarking them&mdash;and ran 25 experiments over three days.  10 accepted, 13 rejected, 1 neutral, 1 mixed.  Coverage went from 9.5% to 84.9%, Chamfer distance dropped 91%.</p>
+
+        <p>The interesting part isn&rsquo;t the numbers.  It&rsquo;s what the rejection pattern revealed about the pipeline&rsquo;s architecture.</p>
+
+        <h2>The Problem and the Process</h2>
+
+        <p>The codebase is a sketch reconstruction pipeline&mdash;about 12,000 lines of C++17 that takes noisy 2D point clouds (sampled from cross-sections of real CAD meshes) and reconstructs clean engineering sketches: line segments, circular arcs, connected paths, geometric constraints.  The pipeline has four stages: Hough transform detection, L1/Lasso feature selection, topology recovery, and constraint enforcement.  It runs against a benchmark of 978 slices from real CAD models, ranging from 200 to 50,000+ points per slice.</p>
+
+        <p>The workflow was straightforward.  Gemini 2.5 Pro (Deep Think) received the full benchmark data, per-bucket breakdowns, and the code architecture, then produced detailed implementation plans with 2&ndash;4 strategies per sprint.  Claude Code implemented them, ran the full 978-slice benchmark, did ablation testing (disable each strategy independently, re-run the benchmark), and wrote up a report.  Each sprint cycle ran 1&ndash;3 hours wall-clock, and I was mostly checking in periodically to move reports between the two systems and sanity-check the direction.</p>
+
+        <h2>Day 1: Infrastructure (9.5% &rarr; 71% Coverage)</h2>
+
+        <p>The first benchmark run produced 9.5% mean coverage.  The pipeline had been tuned on synthetic data, and it turns out that when your synthetic bounding box is ~2 units and your real meshes range from 20 to 1100 units, a hardcoded spatial index cell size of 0.01 is catastrophically wrong.  Every cell had 0&ndash;1 points, noise estimation returned a fallback value, and the Hough accumulator allocated 220,000 distance bins.  Nothing got detected.</p>
+
+        <p>Three fixes landed sequentially: a scale-adaptive grid (+28pp coverage), unit normalization of all input points (+34pp), and log-spaced Hough radius bins (&minus;19% Hausdorff, &minus;18% Chamfer).  Three other arc detection tweaks were tried and rejected&mdash;they all made things worse.  A pattern that would repeat.</p>
+
+        <img src="images/Feb24-25-coverage.png" alt="Coverage progression across all sprints, showing the jump from 9.5% to 84.9% over six sprint cycles">
+
+        <h2>Day 2: Replacing the Selector</h2>
+
+        <p>The existing feature selector used greedy initialization plus simulated annealing.  Deep Think proposed replacing it with an L1/Lasso formulation: build a coverage matrix where K[i,j] = 1 if point i is within tolerance of candidate j, then solve a penalized least-squares problem with L1 sparsity and a graph Laplacian term for topology regularization.</p>
+
+        <p>The L1 selector was an immediate win: &minus;22% Hausdorff, &minus;16% Chamfer, +2pp coverage, and 70x faster than SA.  It took another sprint to get the Laplacian regularization right (degree normalization + anchored solving so good features from Phase 1 couldn&rsquo;t be &ldquo;poisoned&rdquo; by bad neighbors in Phase 2), but after that the selector was well-calibrated.</p>
+
+        <p>What didn&rsquo;t work on Day 2: four more arc detection variants (all rejected&mdash;again, each one tried to be more precise about what counted as a valid arc), and adaptive Lasso (scaling the L1 penalty by inverse evidence&mdash;too aggressive, killed marginal-but-correct features).</p>
+
+        <h2>Day 3: The Pattern Crystallizes</h2>
+
+        <p>This is where it gets interesting.</p>
+
+        <h3>Sprint 4: Trying to Prune (All Rejected)</h3>
+
+        <p>Deep Think proposed three selection-phase improvements: RMS-adaptive penalty, iterative reweighted L1 (approximate L0 sparsity), and endpoint-anchored residuals.  Claude Code implemented all three, ran the benchmark, ran ablations.</p>
+
+        <p>Everything got worse.  The iterative reweighting was the biggest offender&mdash;it killed 58 of 98 features on average.  The reweighting penalty was too aggressive for a dataset where many <em>correct</em> features have fractional weights due to overlapping coverage.</p>
+
+        <p>The report back to Deep Think was blunt: stop trying to prune features.  The selector is correct.  The problem is detection recall.</p>
+
+        <h3>Sprint 5: Detection Improvements (Surprise Ablation Result)</h3>
+
+        <p>Deep Think pivoted to three detection-phase strategies: ghost candidates (analytic bridging between dangling endpoints), soft-voting Hough (Gaussian-weighted accumulator), and coverage-guarded merging.</p>
+
+        <p>Ablation revealed a surprise: soft-voting Hough was catastrophic.  It over-consolidated Hough peaks, destroying candidate diversity.  The L1 solver <em>needs</em> many overlapping candidates to choose from; Gaussian blurring merged adjacent peaks into single compromise positions that didn&rsquo;t fit anything well.  Disabling soft-voting alone produced the best results of any sprint: &minus;23% Hausdorff P95, &minus;21% Chamfer, +9.6pp coverage.</p>
+
+        <h3>Sprint 6: Targeting the Weak Bucket</h3>
+
+        <p>The &lt;5k-point bucket (508 slices, 52% of the dataset) was still the weakest.  Deep Think prescribed four strategies; Claude Code implemented all four, then ran systematic ablation&mdash;disable each individually.</p>
+
+        <p>Two of the four hurt.  Tightening the normal threshold from cos(15&deg;) to cos(5&deg;) starved features of legitimate inliers&mdash;in a noisy point cloud, normals have 2&ndash;5&deg; of noise, and cos(5&deg;) = 0.996 rejected real inliers.  Grid-shifted Hough created near-duplicate peaks that confused the solver.  The winning config was the two strategies that <em>loosened</em> constraints: lower acceptance floors for sparse clouds and relaxed arc merge gating.</p>
+
+        <img src="images/Feb24-25-quality.png" alt="Quality metrics progression across sprints with rejected experiments marked in red">
+
+        <h2>The Unifying Principle</h2>
+
+        <img src="images/Feb24-25-scorecard.png" alt="Scorecard of all 25 experiments showing 10 accepted, 13 rejected, 1 neutral, and 1 mixed">
+
+        <p>Over 25 experiments, a clean pattern emerged.  Everything that helped made detection <em>less</em> selective&mdash;lower thresholds, looser merge gates, more candidates for the solver to evaluate.  Everything that hurt tried to make detection or selection <em>more</em> selective&mdash;tighter normals, Gaussian blurring, iterative pruning, adaptive penalties.  The arc detection variants that failed on Days 1 and 2 were all attempts to be more precise about what counted as an arc&mdash;same pattern.</p>
+
+        <p>The pattern has a clean explanation: <strong>in a detection &rarr; selection pipeline where the selector is a powerful convex solver, candidate recall dominates candidate precision.</strong>  The L1 solver handles false positives cheaply&mdash;they just get weight zero.  But features that never enter the candidate pool are unrecoverable.  Every attempt to pre-filter or prune candidates was, in effect, doing a worse job than the solver would have done anyway, while also removing some correct features.</p>
+
+        <p>I&rsquo;d bet this generalizes beyond sketch reconstruction.  If you have a two-stage pipeline where the second stage is a well-formulated optimization, your instinct to &ldquo;help&rdquo; by cleaning up the first stage&rsquo;s output is probably counterproductive.  Give the optimizer more to work with, not less.</p>
+
+        <h2>By the Numbers</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Day 1 Start</th>
+                    <th>Day 3 End</th>
+                    <th>Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Coverage</td>
+                    <td>9.5%</td>
+                    <td>84.9%</td>
+                    <td>+75pp</td>
+                </tr>
+                <tr>
+                    <td>Chamfer</td>
+                    <td>7.21</td>
+                    <td>0.63</td>
+                    <td>&minus;91%</td>
+                </tr>
+                <tr>
+                    <td>Hausdorff P95</td>
+                    <td>N/A</td>
+                    <td>2.16</td>
+                    <td>&mdash;</td>
+                </tr>
+                <tr>
+                    <td>&lt;5k Coverage</td>
+                    <td>8.4%</td>
+                    <td>81.9%</td>
+                    <td>+73pp</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>The most dramatic gains came from infrastructure&mdash;normalization alone was +34pp coverage.  But the algorithmic improvements from Days 2&ndash;3 were what made the quality metrics usable.  Chamfer dropped 40% and Hausdorff P95 dropped 37% after the infrastructure was already solid.</p>
+
+        <h2>How the Distribution Shifted</h2>
+
+        <p>The aggregate means tell one story, but the per-slice distributions show where the improvements actually landed.</p>
+
+        <img src="images/Feb24-25-hp95-distribution.png" alt="Four-panel distribution comparison showing histogram, CDF, per-slice scatter, and per-bucket breakdown of Hausdorff P95 improvements">
+
+        <p>The heavy tail compressed substantially&mdash;slices with near-perfect reconstruction (HP95 &lt; 1.0) went from 479 to 611 (+28%), while poor reconstructions (HP95 &gt; 10) dropped from 66 to 43 (&minus;35%).  The &lt;5k-point bucket was the primary beneficiary, which makes sense&mdash;those were the slices most affected by detection threshold sensitivity.</p>
+
+        <img src="images/Feb24-25-fit-examples.png" alt="Visual comparison of good fit and poor fit sketch reconstructions">
+
+        <h2>The Workflow, Honestly</h2>
+
+        <p>I want to be clear about what this was and wasn&rsquo;t.  This was a well-defined optimization problem with a clear objective function, a fast benchmark loop (~5 minutes per run), and a codebase that was already structured to accept the kinds of changes being proposed.  The AI systems weren&rsquo;t designing the architecture or figuring out what problem to solve&mdash;they were exploring a parameter and algorithm space within an existing framework.</p>
+
+        <p>That said, the throughput was genuinely surprising.  25 experiments with full ablation testing in three days is probably more than I would have gotten through myself in that time.  The ablation discipline in particular&mdash;systematically disabling each change and re-running the full benchmark&mdash;is something I&rsquo;d likely have skipped on at least half the experiments if I were doing it manually, because it&rsquo;s tedious.  And it turns out that&rsquo;s exactly where the most valuable information was hiding.  Without ablation, Sprint 5 would have shipped with soft-voting Hough enabled, and Sprint 6 would have included the tight normal threshold.  Both would have degraded the final result.</p>
+
+        <p>The cycle of &ldquo;analyst proposes, implementer tests, results feed back to analyst&rdquo; worked well enough that I&rsquo;m going to keep using it for this kind of bounded optimization work.  It&rsquo;s not going to replace thinking about architecture or figuring out what to build next.  But for &ldquo;here&rsquo;s a pipeline, here&rsquo;s a benchmark, make the numbers better&rdquo;&mdash;it&rsquo;s a good way to run experiments while I&rsquo;m doing something else.</p>
+
+        <footer>
+            <p>CodeReclaimers is a veteran-owned business located in Ramseur, NC USA.</p>
+        </footer>
+    </div>
+</body>
+</html>
