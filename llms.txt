@@ -1,0 +1,33 @@
+# CodeReclaimers LLC
+
+> CodeReclaimers LLC maintains open-source scientific computing libraries with significant academic adoption. This site hosts project documentation and maintainer consulting information for neat-python and NeatEvolution.jl.
+
+## About
+
+CodeReclaimers LLC is an independent software consulting firm specializing in scientific computing in C++, Python and Julia, computational geometry, and neuroevolution. Founded and operated by Alan McIntyre, who brings 28+ years of software development experience, an MS in Applied Mathematics (University of Washington), and a background in naval nuclear service. CodeReclaimers maintains several open-source libraries with significant academic adoption, including neat-python (100+ academic citations) and NeatEvolution.jl. Consulting engagements span research implementation, library development, and applied algorithm design.
+
+## Consulting
+
+Engagement types: research consulting, library development, implementation engagements, and code review/audit.
+
+Domains: computational geometry, CAD reverse engineering, C++ scientific computing, Python scientific computing, Julia scientific computing, differential equations, numerical methods, linear algebra, optimization, applied mathematics, neuroevolution, NEAT (NeuroEvolution of Augmenting Topologies), continuous-time recurrent neural networks (CTRNNs), CUDA / GPU computing, computer vision
+
+Contact: consulting@codereclaimers.com
+Full consulting profile: https://codereclaimers.com/consulting
+
+## Projects
+
+- [neat-python](https://github.com/CodeReclaimers/neat-python) — Python NEAT implementation with CTRNN support. 100+ academic citations.
+- [NeatEvolution.jl](https://github.com/CodeReclaimers/NeatEvolution.jl) — Julia NEAT implementation. Registered in Julia general package registry.
+
+## Machine-Readable Endpoints
+
+- Capability manifest: https://codereclaimers.com/capabilities (coming soon)
+- Agent query: https://alan.recursive.support/query (coming soon)
+- MCP server: https://alan.recursive.support/mcp (coming soon)
+
+## Identity
+
+- ORCID: 0000-0002-8071-4219
+- GitHub: https://github.com/CodeReclaimers
+- Primary domain: https://codereclaimers.com
