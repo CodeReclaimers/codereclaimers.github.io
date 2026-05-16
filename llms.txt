@@ -19,6 +19,7 @@ Full consulting profile: https://codereclaimers.com/consulting
 
 - [neat-python](https://github.com/CodeReclaimers/neat-python) — Python NEAT implementation with CTRNN support. 100+ academic citations.
 - [NeatEvolution.jl](https://github.com/CodeReclaimers/NeatEvolution.jl) — Julia NEAT implementation. Registered in Julia general package registry.
+- [Arborist.jl](https://github.com/CodeReclaimers/Arborist.jl) — Generic genetic programming framework for Julia. Supports NEAT topology evolution, multi-objective optimization (NSGA-II), quality-diversity search, and LLM-as-operator workflows.
 
 ## Machine-Readable Endpoints
 
